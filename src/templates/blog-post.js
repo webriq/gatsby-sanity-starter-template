@@ -3,14 +3,23 @@ import { Link, graphql } from 'gatsby'
 
 import Layout from '../components/Layout'
 import SEO from '../components/seo'
+import BasePortableText from '@sanity/block-content-to-react'
 import { rhythm, scale } from '../utils/typography'
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const post = this.props.data.strapiPosts
-    const siteTitle = this.props.data.site.siteMetadata.title
+    const post = this.props.data.post
+    const siteTitle = this.props.data.post.metaTitle
     const { previous, next } = this.props.pageContext
-
+    const serializers = {
+      types: {
+        authorReference: ({ node }) => (
+          <span>
+            {post.author.firstname} {post.author.lastname}
+          </span>
+        ),
+      },
+    }
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <SEO title={post.title} description={post.excerpt} />
@@ -19,13 +28,14 @@ class BlogPostTemplate extends React.Component {
           style={{
             ...scale(-1 / 5),
             display: `block`,
-            marginBottom: rhythm(1),
-            marginTop: rhythm(-1),
+            marginBottom: 0,
+            // marginTop: rhythm(-1),
           }}
         >
-          {post.createdAt}
+          {post.publishedAt}
         </p>
-        <div dangerouslySetInnerHTML={{ __html: post.body }} />
+        <BasePortableText blocks={post._rawBody} serializers={serializers} />
+        {/*<div dangerouslySetInnerHTML={{ __html: post.body }} />*/}
         <hr
           style={{
             marginBottom: rhythm(1),
@@ -43,14 +53,14 @@ class BlogPostTemplate extends React.Component {
         >
           <li>
             {previous && (
-              <Link to={previous.fields.slug} rel="prev">
+              <Link to={previous.slug.current} rel="prev">
                 ← {previous.title}
               </Link>
             )}
           </li>
           <li>
             {next && (
-              <Link to={next.fields.slug} rel="next">
+              <Link to={next.slug.current} rel="next">
                 {next.title} →
               </Link>
             )}
@@ -67,30 +77,33 @@ class BlogPostTemplate extends React.Component {
 export default BlogPostTemplate
 
 export const query = graphql`
-  query($id: String!) {
-    site {
-      siteMetadata {
+  query BlogPostTemplateQuery($id: String!) {
+    post: sanityPost(id: { eq: $id }) {
+      id
+      author {
+        image {
+          asset {
+            _id
+            url
+          }
+        }
+      }
+      mainImage {
+        asset {
+          id
+          url
+        }
+      }
+      publishedAt
+      categories {
+        _id
         title
       }
-    }
-    strapiPosts(id: { eq: $id }) {
-      id
       title
-      body
-      excerpt
-      createdAt
-      author {
-        id
-        email
-        profile
+      slug {
+        current
       }
-      fields {
-        slug
-      }
-      metaTitle
-      metaKeywords
-      metaDescription
-      status
+      _rawBody(resolveReferences: { maxDepth: 5 })
     }
   }
 `

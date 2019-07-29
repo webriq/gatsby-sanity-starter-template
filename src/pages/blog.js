@@ -3,13 +3,16 @@ import { Link, graphql } from 'gatsby'
 
 import Layout from '../components/Layout'
 import SEO from '../components/seo'
+import BasePortableText from '@sanity/block-content-to-react'
 import { rhythm } from '../utils/typography'
 
 class BlogIndex extends React.Component {
   render() {
     const { data } = this.props
     const siteTitle = data.site.siteMetadata.title
-    const posts = data.allStrapiPosts.edges
+    const posts = data.allSanityPost.edges
+
+    console.log(this.props)
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
@@ -19,19 +22,32 @@ class BlogIndex extends React.Component {
         />
         {posts.map(({ node }) => {
           const title = node.title
+          const serializers = {
+            types: {
+              authorReference: ({ node }) => (
+                <span>
+                  {node.author.firstname} {node.author.lastname}
+                </span>
+              ),
+            },
+          }
           return (
-            <div key={node.fields.slug}>
+            <div key={node.slug.current}>
               <h3
                 style={{
                   marginBottom: rhythm(1 / 4),
                 }}
               >
-                <Link style={{ boxShadow: `none` }} to={node.fields.slug}>
+                <Link style={{ boxShadow: `none` }} to={node.slug.current}>
                   {title}
                 </Link>
               </h3>
-              <small>{node.date}</small>
-              <p dangerouslySetInnerHTML={{ __html: node.excerpt }} />
+              <small>{node._createdAt}</small>
+
+              <BasePortableText
+                blocks={node._rawExcerpt}
+                serializers={serializers}
+              />
             </div>
           )
         })}
@@ -49,22 +65,33 @@ export const pageQuery = graphql`
         title
       }
     }
-    allStrapiPosts(
+    allSanityPost(
       filter: { status: { eq: "published" } }
-      sort: { fields: [createdAt], order: DESC }
+      sort: { fields: [author____createdAt], order: DESC }
     ) {
       edges {
         node {
           id
           title
-          excerpt
-          createdAt(fromNow: true)
-          updatedAt(fromNow: true)
-          fields {
-            slug
+          _rawExcerpt
+          slug {
+            current
           }
+          _createdAt(fromNow: true)
+          _updatedAt(fromNow: true)
           author {
             id
+            firstname
+            lastname
+            image {
+              asset {
+                id
+                url
+                fluid {
+                  src
+                }
+              }
+            }
           }
         }
       }

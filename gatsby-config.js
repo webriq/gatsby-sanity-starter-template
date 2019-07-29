@@ -15,22 +15,32 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-source-strapi`,
+      resolve: 'gatsby-source-sanity',
       options: {
-        apiURL: process.env.API_URL || 'http://localhost:1337',
-        contentTypes: process.env.API_BLOG_CONTENT_TYPES || [
-          `users`,
-          `posts`,
-          `categories`,
-          `tags`,
-          `profiles`,
-        ],
-        loginData: {
-          identifier: process.env.API_USER_EMAIL || 'galangdj@gmail.com',
-          password: process.env.API_USER_PASSWORD || 'test123',
-        },
+        projectId: process.env.SANITY_PROJECT_ID,
+        dataset: process.env.SANITY_DATASET,
+        token: process.env.SANITY_READ_TOKEN,
+        // watchMode: !isProd,
+        // overlayDrafts: !isProd
       },
     },
+    // {
+    //   resolve: `gatsby-source-strapi`,
+    //   options: {
+    //     apiURL: process.env.API_URL || 'http://localhost:1337',
+    //     contentTypes: process.env.API_BLOG_CONTENT_TYPES || [
+    //       `users`,
+    //       `posts`,
+    //       `categories`,
+    //       `tags`,
+    //       `profiles`,
+    //     ],
+    //     loginData: {
+    //       identifier: process.env.API_USER_EMAIL || 'galangdj@gmail.com',
+    //       password: process.env.API_USER_PASSWORD || 'test123',
+    //     },
+    //   },
+    // },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {

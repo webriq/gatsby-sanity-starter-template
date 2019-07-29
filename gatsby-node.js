@@ -10,15 +10,15 @@ exports.createPages = ({ graphql, actions }) => {
   return graphql(
     `
       query {
-        allStrapiPosts(
-          filter: { status: { ne: "unpublished" } }
-          sort: { fields: [createdAt], order: DESC }
+        allSanityPost(
+          filter: { slug: { current: { ne: null } }, publishedAt: { ne: null } }
         ) {
           edges {
             node {
               id
-              fields {
-                slug
+              publishedAt
+              slug {
+                current
               }
             }
           }
@@ -31,19 +31,18 @@ exports.createPages = ({ graphql, actions }) => {
     }
 
     // Create blog posts pages.
-    const posts = result.data.allStrapiPosts.edges
-    console.log(posts)
+    const posts = result.data.allSanityPost.edges
 
     posts.forEach((post, index) => {
       const previous = index === posts.length - 1 ? null : posts[index + 1].node
       const next = index === 0 ? null : posts[index - 1].node
 
       createPage({
-        path: post.node.fields.slug,
+        path: post.node.slug.current,
         component: blogPost,
         context: {
           id: post.node.id,
-          slug: post.node.fields.slug,
+          slug: post.node.slug.current,
           previous,
           next,
         },
@@ -65,7 +64,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   }
 
   // Create slug field for Strapi posts
-  if (node.internal.type === `StrapiPosts`) {
+  if (node.internal.type === `SanityPosts`) {
     const slugify_title = slugify(node.title, {
       replacement: '-', // replace spaces with replacement
       remove: /[,*+~.()'"!:@]/g, // regex to remove characters
