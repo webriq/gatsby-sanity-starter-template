@@ -34,8 +34,13 @@ class BlogPostTemplate extends React.Component {
         >
           {post.publishedAt}
         </p>
+        {post.mainImage && (
+          <img
+            src={post.mainImage.asset.url}
+            alt={post.mainImage.originalFilename}
+          />
+        )}
         <BasePortableText blocks={post._rawBody} serializers={serializers} />
-        {/*<div dangerouslySetInnerHTML={{ __html: post.body }} />*/}
         <hr
           style={{
             marginBottom: rhythm(1),
@@ -92,6 +97,10 @@ export const query = graphql`
         asset {
           id
           url
+          originalFilename
+          fluid {
+            src
+          }
         }
       }
       publishedAt
@@ -104,6 +113,9 @@ export const query = graphql`
         current
       }
       _rawBody(resolveReferences: { maxDepth: 5 })
+      metaTitle
+      metaKeywords
+      metaDescription
     }
   }
 `

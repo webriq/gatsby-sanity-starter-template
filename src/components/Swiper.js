@@ -1,29 +1,29 @@
 import React from 'react'
 import Swiper from 'react-id-swiper'
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm'
-import 'react-id-swiper/src/styles/css/swiper.css'
+import 'swiper/dist/css/swiper.css'
 
 class SwiperSample extends React.Component {
   render() {
-    const { children, slidesperview } = this.props;
+    const { children, slidesperview } = this.props
     const params = {
       modules: [Pagination, Navigation],
       slidesPerView: slidesperview,
       spaceBetween: 30,
-      containerClass: "swiper-container pb-5",
+      containerClass: 'swiper-container pb-5',
       nested: true,
       autoplay: {
         delay: 5000,
-        disableOnInteraction: false
+        disableOnInteraction: false,
       },
       pagination: {
         el: '.swiper-pagination',
         type: 'bullets',
-        clickable: true
+        clickable: true,
       },
       navigation: {
         nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
+        prevEl: '.swiper-button-prev',
       },
       // breakpoints: {
       //   768: {
@@ -39,14 +39,9 @@ class SwiperSample extends React.Component {
       //     spaceBetween: 10
       //   }
       // }
-
     }
-    return (
-      <Swiper {...params}>
-          {children}
-      </Swiper>
-    )
+    return <Swiper {...params}>{children}</Swiper>
   }
 }
 
-export default SwiperSample;
+export default SwiperSample

@@ -5,9 +5,9 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `WebriQ Gatsby + Strapi Starter Template`,
+    title: `WebriQ Gatsby + Sanity Starter Template`,
     author: `WebriQ`,
-    description: `WebriQ Gatsby Starter Template with its blog posts coming Strapi app instance.`,
+    description: `WebriQ Gatsby Starter Template with its blog posts coming Sanity app instance.`,
     siteUrl: `https://webriq-gatsby-strapi-starter-template.webriq.me/`,
     social: {
       twitter: `kylemathews`,
@@ -24,23 +24,6 @@ module.exports = {
         // overlayDrafts: !isProd
       },
     },
-    // {
-    //   resolve: `gatsby-source-strapi`,
-    //   options: {
-    //     apiURL: process.env.API_URL || 'http://localhost:1337',
-    //     contentTypes: process.env.API_BLOG_CONTENT_TYPES || [
-    //       `users`,
-    //       `posts`,
-    //       `categories`,
-    //       `tags`,
-    //       `profiles`,
-    //     ],
-    //     loginData: {
-    //       identifier: process.env.API_USER_EMAIL || 'galangdj@gmail.com',
-    //       password: process.env.API_USER_PASSWORD || 'test123',
-    //     },
-    //   },
-    // },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
@@ -80,31 +63,33 @@ module.exports = {
         `,
         feeds: [
           {
-            serialize: ({ query: { site, allStrapiPosts } }) => {
-              return allStrapiPosts.edges.map(edge => {
+            serialize: ({ query: { site, allSanityPost } }) => {
+              return allSanityPost.edges.map(edge => {
                 return Object.assign({}, edge.node, {
-                  description: edge.node.excerpt,
-                  date: edge.node.createdAt,
-                  url: site.siteMetadata.siteUrl + edge.node.fields.slug,
-                  guid: site.siteMetadata.siteUrl + edge.node.fields.slug,
-                  custom_elements: [{ 'content:encoded': edge.node.excerpt }],
+                  description: edge.node._rawExcerpt,
+                  date: edge.node._createdAt,
+                  url: site.siteMetadata.siteUrl + edge.node.slug.current,
+                  guid: site.siteMetadata.siteUrl + edge.node.slug.current,
+                  custom_elements: [
+                    { 'content:encoded': edge.node._rawExcerpt },
+                  ],
                 })
               })
             },
             query: `
               {
-                allStrapiPosts(
+                allSanityPost(
                   filter: { status: { eq: "published" } }
-                  sort: { fields: [createdAt], order: DESC }
+                  sort: { fields: [author____createdAt], order: DESC }
                 ) {
                   edges {
                     node {
                       id
                       title
-                      excerpt
-                      createdAt
-                      fields {
-                        slug
+                      _rawExcerpt
+                      _createdAt
+                      slug {
+                        current
                       }
                     }
                   }

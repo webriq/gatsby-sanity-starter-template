@@ -2,9 +2,9 @@ import React from 'react'
 import { Link, graphql } from 'gatsby'
 import Layout from '../components/Layout'
 import SEO from '../components/seo'
-// import MySwiper from '../components/Swiper'
+import MySwiper from '../components/Swiper'
 import SampleForm from '../components/Form'
-// import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
 class IndexPage extends React.Component {
@@ -23,7 +23,7 @@ class IndexPage extends React.Component {
           <hr style={{ marginTop: `60px` }} />
           <h1>Sample Swiper</h1>
           <br />
-          {/*<MySwiper slidesperview={3}>
+          <MySwiper slidesperview={3}>
             <div>
               <LazyLoadImage
                 effect="blur"
@@ -104,7 +104,7 @@ class IndexPage extends React.Component {
                 alt=""
               />
             </div>
-          </MySwiper>*/}
+          </MySwiper>
           <br />
           <br />
           <h1>Sample Form</h1>

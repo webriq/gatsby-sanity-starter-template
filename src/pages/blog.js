@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
-
 import Layout from '../components/Layout'
 import SEO from '../components/seo'
 import BasePortableText from '@sanity/block-content-to-react'
