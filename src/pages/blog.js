@@ -76,8 +76,8 @@ export const pageQuery = graphql`
           slug {
             current
           }
-          _createdAt(fromNow: true)
-          _updatedAt(fromNow: true)
+          _createdAt
+          _updatedAt
           author {
             id
             firstname
