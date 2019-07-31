@@ -3,6 +3,8 @@ require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
+const isProd = process.env.NODE_ENV === 'production'
+
 module.exports = {
   siteMetadata: {
     title: `WebriQ Gatsby + Sanity Starter Template`,
@@ -17,11 +19,11 @@ module.exports = {
     {
       resolve: 'gatsby-source-sanity',
       options: {
-        projectId: process.env.SANITY_PROJECT_ID,
-        dataset: process.env.SANITY_DATASET,
+        projectId: process.env.SANITY_PROJECT_ID || 'puw6oew8',
+        dataset: process.env.SANITY_DATASET || 'production',
         token: process.env.SANITY_READ_TOKEN,
-        // watchMode: !isProd,
-        // overlayDrafts: !isProd
+        watchMode: !isProd,
+        overlayDrafts: !isProd,
       },
     },
     `gatsby-transformer-sharp`,
